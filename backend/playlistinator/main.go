@@ -740,7 +740,7 @@ func handleGeneratePlaylist(w http.ResponseWriter, r *http.Request) {
 }
 
 // Function to start the authentication server for Spotify
-func StartAuthServer() {
+func StartSpotifyAuthServer() {
 	clientId := os.Getenv("SPOTIFY_CLIENT_ID")
 	clientSecret := os.Getenv("SPOTIFY_CLIENT_SECRET")
 	redirectURI := os.Getenv("SPOTIFY_REDIRECT_URI")
@@ -849,7 +849,7 @@ func main() {
 	}
 
 	if *authMode {
-		StartAuthServer()
+		StartSpotifyAuthServer()
 		return
 	}
 

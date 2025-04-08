@@ -21,5 +21,23 @@
 go.work
 go.work.sum
 
-# env file
+# Environment files
 .env
+.env.*
+!.env.example
+backend/**/.env
+backend/**/.env.*
+!backend/**/.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Kubernetes secrets
+k8s/secrets.yaml
+helm/playlistinator/templates/secrets.yaml
+
+# Local development files
+.DS_Store
+.idea/
+.vscode/
+*.log
