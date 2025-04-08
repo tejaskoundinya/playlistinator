@@ -2,18 +2,15 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { Music, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { Loader2, Music, RefreshCw } from 'lucide-react';
 import { generatePlaylist } from '@/services/api';
 
 export default function Home() {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGeneratePlaylist = async () => {
-    setIsGenerating(true);
+    setIsLoading(true);
     try {
       const response = await generatePlaylist();
       
@@ -26,72 +23,65 @@ export default function Home() {
       toast.error('Failed to generate playlist. Please try again.');
       console.error(error);
     } finally {
-      setIsGenerating(false);
-      setProgress(100);
+      setIsLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-8">
-      <div className="container mx-auto max-w-4xl">
-        <Card className="bg-gray-800/50 border-gray-700">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold text-white flex items-center gap-2">
-              <Music className="h-8 w-8" />
-              Playlist Generator
-            </CardTitle>
-            <CardDescription className="text-gray-400">
-              Generate your personalized Spotify playlist based on your Last.fm listening history
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="flex-1">
-                  <Progress value={progress} className="h-2" />
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            Playlistinator
+          </h1>
+          <p className="text-xl text-gray-300 mb-12">
+            Transform your Last.fm listening history into a beautiful Spotify playlist
+          </p>
+          
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-700/50">
+            <div className="space-y-6">
+              <div className="flex items-center justify-center space-x-12 text-gray-300">
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-2">
+                    <Music className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <span className="text-sm">Last.fm</span>
                 </div>
-                <span className="text-sm text-gray-400">{progress}%</span>
+                <div className="w-24 h-0.5 bg-gray-600"></div>
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-2">
+                    <Music className="w-6 h-6 text-green-400" />
+                  </div>
+                  <span className="text-sm">Spotify</span>
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card className="bg-gray-700/50 border-gray-600">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-white">Last.fm Stats</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-400">Your listening history from the last 30 days</p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-gray-700/50 border-gray-600">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-white">Spotify Playlist</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-400">TK - Hot 100</p>
-                  </CardContent>
-                </Card>
+              
+              <div className="flex justify-center">
+                <Button 
+                  onClick={handleGeneratePlaylist} 
+                  disabled={isLoading}
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-6 px-8 text-lg rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <span>Generating Playlist...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center space-x-2">
+                      <Music className="h-5 w-5" />
+                      <span>Generate My Playlist</span>
+                    </div>
+                  )}
+                </Button>
               </div>
+              
+              <p className="text-sm text-gray-400">
+                Your playlist will be created based on your Last.fm listening history from the past 30 days
+              </p>
             </div>
-          </CardContent>
-          <CardFooter>
-            <Button
-              onClick={handleGeneratePlaylist}
-              disabled={isGenerating}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating Playlist...
-                </>
-              ) : (
-                <>
-                  <Music className="mr-2 h-4 w-4" />
-                  Generate Playlist
-                </>
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
+          </div>
+        </div>
       </div>
     </main>
   );
